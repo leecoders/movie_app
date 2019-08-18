@@ -224,7 +224,7 @@ export default App;
 
 ## #2 4
 
-### component 함수에서 전달 받은 prop의 타입을 사용하기 전에 올바른 타입인지 체크해야 하는 방법
+### component 함수에서 전달 받은 prop의 타입을 사용하기 전에 올바른 타입인지 체크하는 방법
 - `npm i prop-types`를 통해 패키지 install
 ```javascript
 ...

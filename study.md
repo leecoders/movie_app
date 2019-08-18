@@ -123,5 +123,122 @@ export default App;
 ## #2 3
 
 ### component 배열을 다른 component에 전달할 때 배열의 각요소를 unique하게 구분할 수 있도록 `key`라는 property가 있어야 한다.
-- React가 아래와 같은 경고 메시지를 출력한다.
+- React는 각 component를 구분하지 못하기 때문에 아래와 같은 warning 메시지를 출력한다.
 ![react_needs_key_property](https://user-images.githubusercontent.com/47619140/63220945-7c098a80-c1cc-11e9-820f-522d8f2fff7b.png)
+**해결책**
+```javascript
+import React from 'react';
+
+function Food({ fav }) {
+  console.log(fav);
+  return (
+    <h1>I like {fav}</h1>
+  );
+}
+
+const foodList = [
+  {
+    id : 0,
+    name : "김밥"
+  },
+  {
+    id : 1,
+    name : "김치"
+  },
+  {
+    id : 2,
+    name : "볶음밥"
+  },
+  {
+    id : 3,
+    name : "라면"
+  },
+];
+
+function App() {
+  return (
+    <div className="App">
+      {foodList.map(dish => (
+        <Food key={dish.id} fav={dish.name}/>
+      ))}
+    </div>
+  );
+}
+
+export default App;
+```
+- `key`라는 프로퍼티는 `Food()`로 전달되지 않는다.
+  - 단지 React 내부적으로 사용되는 프로퍼티일 뿐이다.
+
+### React에서 `img` 태그를 사용할 때는 `alt prop`을 추가해야 한다.
+- 이미지에 대한 이름을 등록한다.
+**component에 이미지 넣기**
+```javascript
+import React from 'react';
+
+function Food({ fav, picture }) {
+  console.log(fav);
+  return (
+    <div>
+      <img src={picture} alt={fav}/>
+      <h1>I like {fav}</h1>
+    </div>
+  );
+}
+
+const foodList = [
+  {
+    id : 0,
+    name : "김밥",
+    img : "https://i.ytimg.com/vi/2G5SAC3UI3M/maxresdefault.jpg"
+  },
+  {
+    id : 1,
+    name : "김치",
+    img : "https://i.ytimg.com/vi/2G5SAC3UI3M/maxresdefault.jpg"
+  },
+  {
+    id : 2,
+    name : "볶음밥",
+    img : "https://i.ytimg.com/vi/2G5SAC3UI3M/maxresdefault.jpg"
+  },
+  {
+    id : 3,
+    name : "라면",
+    img : "https://i.ytimg.com/vi/2G5SAC3UI3M/maxresdefault.jpg"
+  },
+];
+
+function App() {
+  return (
+    <div className="App">
+      {foodList.map(dish => (
+        <Food key={dish.id} fav={dish.name} picture={dish.img}/>
+      ))}
+    </div>
+  );
+}
+
+export default App;
+```
+
+## #2 4
+
+### component 함수에서 전달 받은 prop의 타입을 사용하기 전에 올바른 타입인지 체크해야 하는 방법
+- `npm i prop-types`를 통해 패키지 install
+```javascript
+...
+import PropTypes from 'prop-types';
+...
+Food.propTypes = {
+  fav : PropTypes.number, // number를 요구!!
+  picture : PropTypes.string
+};
+...
+```
+- Food 객체(함수)에 `propTypes`라는 프로퍼티를 추가하고 타입을 체크하고 싶은 프로퍼티들과 같은 이름의 프로퍼티들을 갖는 객체를 할당한다.
+  - 각 프로퍼티에 `PropTypes.<type>`으로 `요구되는 타입`을 지정
+![example_prop-types](https://user-images.githubusercontent.com/47619140/63221216-bd039e00-c1d0-11e9-8fc4-0299541f029b.png)
+- `number`로 지정되어 있으나 `string`으로 파라미터로 Food 객체(함수)로 넘어왔기 때문에 위와 같은 warning 메시지를 확인할 수 있다.
+- 다른 이름의 프로퍼티를 전달받으면 `undefined`라는 warning 메시지도 받을 수 있다.
+- Food 객체에 `prop-types`사용을 목적으로 추가하는 프로퍼티 이름으로 `propTypes`만을 사용해야 한다.

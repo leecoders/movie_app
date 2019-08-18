@@ -337,9 +337,59 @@ this.setState(current => ({count : current.count + 1}));
 ### mounting
 - constructor() : JS에서 클래스가 생성될 때 호출되는 함수
 - render() : 렌더링될 때 실행
-- componentDidMount() : component가 마운트(component의 첫 렌더링)된 후에 실행
+- componentDidMount() : component가 마운트(component의 첫 렌더링)된 후에 실행(render보다 나중에 실행됨)
 ### updating
 - render() : 다시 렌더링될 때 실행
 - componentDidUpdate() : component가 업데이트(다시 렌더링)된 후에 실행
 ### unmounting
 - componentWillUnmount()
+
+## #4 0 Fetching Movies from API
+
+### axios
+- fetch를 보다 편하게 작동시키기 위해 만들어진 모듈
+- 이를 통해 웹에서 데이터를 가져오자
+
+### URL이 계속 바뀔 수 있기 때문에 아래 주소에서 JSON 문자열을 얻어오자
+> https://yts-proxy.now.sh/list_movies.json
+
+## #4 1 Rendering the Movies
+
+### `axios.get()`은 비동기적으로 실행되므로 async/await 패턴을 사용해야 함
+```javascript
+  getMovies = async () => {
+    const {
+      data : { 
+        data : { movies }
+       }
+    } = await axios.get("https://yts-proxy.now.sh/list_movies.json");
+    console.log(movies);
+  }
+  componentDidMount() {
+    this.getMovies();
+  }
+```
+- 추가로, `movies` 객체를 얻는 것이 목적인데 객체가 너무 얽혀있음.. 그래서 위의 코드 처럼 `ES6`문법을 활용하여 객체 내부 어딘가의 `movies`를 꺼내어 초기화시킬 수 있다.
+
+### setState에 새로운 객체를 전달하는 방법
+```javascript
+  ...
+  state = {
+    isLoading : true,
+    movies : []
+  };
+  getMovies = async () => {
+    const {
+      data : { 
+        data : { movies }
+       }
+    } = await axios.get("https://yts-proxy.now.sh/list_movies.json");
+    this.setState({ movies });
+  }
+  ...
+```
+- JS가 내부적으로 전달받은 객체에서 같은 이름의 프로퍼티를 통해 새로 초기화시킨 뒤 render()를 다시 호출한다.
+  - 그렇기 때문에, 위의 코드처럼 `{movies}`만 전달해도 알아서 꺼내서 초기화 시킨다.
+  - 그러므로 isLoading은 따로 전달하지 않아도 상관 없다.
+
+### component가 state를 필요로 하지 않는다면 class component일 필요 없다.

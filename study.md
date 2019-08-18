@@ -242,3 +242,104 @@ Food.propTypes = {
 - `number`로 지정되어 있으나 `string`으로 파라미터로 Food 객체(함수)로 넘어왔기 때문에 위와 같은 warning 메시지를 확인할 수 있다.
 - 다른 이름의 프로퍼티를 전달받으면 `undefined`라는 warning 메시지도 받을 수 있다.
 - Food 객체에 `prop-types`사용을 목적으로 추가하는 프로퍼티 이름으로 `propTypes`만을 사용해야 한다.
+
+## #3 0
+
+### 함수 component -> 클래스 component
+- React는 자동적으로 모든 `class component`의 `render` 메서드를 실행시킨다.
+  - `render()` 안에서 HTML 코드를 return 시키도록 한다.
+```javascript
+import React from 'react';
+
+class App extends React.Component {
+  render() {
+    return <h1>I'm a class component</h1>
+  }
+}
+export default App;
+```
+- `class component`를 사용하려면 `React.Component`를 상속하도록 해야 한다.
+
+### HTML의 `<button>`태그의 onClick 속성에 JS 함수를 전달할 때 `함수명()`을 전달하지 않는다.
+- `add()`라는 함수가 클래스 내에 있을 때
+```javascript
+<button onClick={this.add()}>Add</button>
+```
+```javascript
+<button onClick={this.add}>Add</button>
+```
+- 첫 번째 방법으로 onClick으로 지정하는 방법은 `this.add()`를 즉시 호출하는 것이다.
+  - 코드가 실행될 때(버튼이 추가되며 onClick 속성으로 전달) 함수를 호출하고 싶은 것이 아니라, 일단 속성으로 전달하고 버튼이 클릭되었을 때 실행되기를 원한다면 함수를 `전달`만 해야 하기 때문에 참조값인 `()`를 뺀 이름만을 전달한다.
+
+### state 개념
+- component의 동적으로 변경되는 데이터를 다루기 위해서 사용된다.
+- function 내에서는 동적인 데이터를 다룰 수 없기 때문에 class와 함께 사용된다.
+- constructor 없이 class fields 내에 `객체`로 정의하면 된다.
+  - class fields를 사용하지 않는다면?
+  ```javascript
+  constructor(props) {
+    super(props);
+    this.state = {
+      number: 0
+    }
+  }
+  ```
+  - 이렇게 해야됨..
+  > constructor 에서 super(props) 를 호출 한 이유는, 우리가 컴포넌트를 만들게 되면서, Component 를 상속했으며, 우리가 이렇게 constructor 를 작성하게 되면 기존의 클래스 생성자를 덮어쓰게 됩니다. 그렇기에, 리액트 컴포넌트가 지니고있던 생성자를 super 를 통하여 미리 실행하고, 그 다음에 우리가 할 작업 (state 설정) 을 해주는 것 입니다.
+  [참고](https://velopert.com/3629)
+
+## #3 1
+
+### setState() : class fields에 정의된 state를 변경하는 방법
+- 단지 `this.state.count++`와 같은 코드는 적용되지 않는다.
+  - 버튼의 `onClick` 속성을 통해 `render()` 에서 호출된 `add()` 내에서 값이 갱신되더라도 render는 다시 HTML을 갱신하지 않는다.
+    - render의 HTML 생성 -> 버튼 클릭 -> 값의 변경 -> ?
+    - 버튼이 클릭되었다고 해서 HTML을 갱신하기 위해 render가 다시 호출되지 않는다.
+- `setState()`를 사용하면 React가 state를 refresh하고 render function을 다시 호출한다.
+  - state는 object이므로 setState는 `새로운 object`를 받아야 한다.
+```javascript
+class App extends React.Component {
+  state = {
+    count : 0
+  };
+  add = () => {
+    console.log('add');
+    this.setState({count : this.state.count + 1});
+  }
+  minus = () => {
+    console.log('minus');
+    this.setState({count : this.state.count - 1});
+  }
+  render() {
+    return (
+      <div>
+        <h1>The number is {this.state.count}</h1>
+        <button onClick={this.add}>Add</button>
+        <button onClick={this.minus}>Minus</button>
+      </div>
+    );
+  }
+}
+```
+- setState 내에서 state에 의존하는 것은 좋지 않기 때문에 권장되는 방법이 아니다.
+```javascript
+this.setState({count : this.state.count + 1});
+```
+```javascript
+this.setState(current => ({count : current.count + 1}));
+```
+- 두 번째 방법을 사용하는 것이 좋다.
+  - setState 내에서 외부 state에 의존하지 않는 가장 좋은 방법
+**결론 : setState()가 호출되면 React는 새로운 state와 함께 render()를 다시 호출한다.**
+
+## #3 2 Component Life Cycle
+
+### mounting
+- constructor() : JS에서 클래스가 생성될 때 호출되는 함수
+- render() : 렌더링될 때 실행
+- componentDidMount() : component가 마운트(component의 첫 렌더링)된 후에 실행
+### updating
+- render() : 다시 렌더링될 때 실행
+- componentDidUpdate() : component가 업데이트(다시 렌더링)된 후에 실행
+### unmounting
+- componentWillUnmount()

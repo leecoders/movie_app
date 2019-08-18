@@ -8,14 +8,29 @@ function Food({ fav }) {
 }
 
 const foodList = [
-  "김밥", "김치", "볶음밥", "라면"
-]
+  {
+    id : 0,
+    name : "김밥"
+  },
+  {
+    id : 1,
+    name : "김치"
+  },
+  {
+    id : 2,
+    name : "볶음밥"
+  },
+  {
+    id : 3,
+    name : "라면"
+  },
+];
 
 function App() {
   return (
     <div className="App">
       {foodList.map(dish => (
-        <Food fav={dish}/>
+        <Food key={dish.key} fav={dish.name}/>
       ))}
     </div>
   );

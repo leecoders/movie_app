@@ -118,3 +118,10 @@ export default App;
 ```
 - `{}` 안에 `{}`를 또 쓸 수 있다.
 - `{}` 안에 HTML 코드는 그냥 넣으면 된다.
+- `map`은 component인 Food들의 배열을 반환하겠지만 이 component 배열이 `div` 내에서 여러 개의 component 즉, HTML 코드로 출력된다. (React가 그것을 해준다.)
+
+## #2 3
+
+### component 배열을 다른 component에 전달할 때 배열의 각요소를 unique하게 구분할 수 있도록 `key`라는 property가 있어야 한다.
+- React가 아래와 같은 경고 메시지를 출력한다.
+![react_needs_key_property](https://user-images.githubusercontent.com/47619140/63220945-7c098a80-c1cc-11e9-820f-522d8f2fff7b.png)

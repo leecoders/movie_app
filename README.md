@@ -446,3 +446,20 @@ this.setState(current => ({ count: current.count + 1 }));
   - 그러므로 isLoading은 따로 전달하지 않아도 상관 없다.
 
 ### component가 state를 필요로 하지 않는다면 class component일 필요 없다.
+
+## #4 2 Styling the Movies
+
+### `<img>` 태그의 `title prop`은 이미지에 마우스를 올렸을 때의 텍스트를 지정한다.
+
+### React의 CSS 통합
+- create-react-app 덕분에 CSS 통합이 쉬워졌다.
+- CSS 파일을 생성하고 JS 파일에서 import하면된다.
+
+**import 예시**
+
+```javascript
+import "./App.css";
+```
+- 객체에 대한 이름이 필요 없다.
+
+### HTML 태그에 class를 통해 CSS를 적용하는 방법에 대한 추가 공부가 필요할 것 같다.

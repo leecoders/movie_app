@@ -496,7 +496,7 @@ Movie.propTypes = {
 
 2. Movie component를 호출하는 쪽인 `App.js`에서 prop을 전달한다. (적절한 json 객체 데이터)
 3. Movie component에서 파라미터를 통해 prop을 넘겨 받는다.
-  - `genres` prop은 `arrayOf(string)` type이므로 `Array.map`을 사용해 각 요소를 출력한다.
+  - `genres` prop은 `arrayOf(string)` type이므로 `Array.prototype.map`을 사용해 각 요소를 출력한다.
     - `<ul>`, `<li>` 태그 사용해서 리스트화 및 각 태그에 적당한 className 지정
 
 ```javascript
@@ -520,3 +520,31 @@ function Movie({ id, year, title, summary, poster, genres }) {
   );
 }
 ```
+
+## #4 5
+
+### `String.prototype.slice`도 있다!
+- `Array.prototype.slice()`처럼 똑같이 사용할 수 있다.
+
+## #5 0 Deploying to Github Pages
+
+### 과정
+1. `npm i gh-pages`
+2. `git remote -v`
+3. `npm i gh-pages`
+4. `package.json` -> `"homepage"` 프로퍼티 생성해서 홈페이지 등록(gh-pages가 동작하기 위해 중요한 단계)
+  - 주의 : 대/소문자 구분을 한다!
+5. (6번에서 할 것 미리 테스트, 생략 가능)`npm run build` -> `build` 폴더 생성됨(최적화된 코드 자동 생성) -> 이 폴더를 `gh-pages`에 업로드할 것
+6. `package.json` -> `"scripts"` 프로퍼티에 스크립트 추가
+  - `"deploy"` 프로퍼티 생성해서 `"gh-pages -d build"` 추가
+  - `"predeploy"` 프로퍼티 생성해서 `"npm run build"` 추가
+    - `npm`이 `predeplay`를 먼저 호출할 것
+    - `predeploy`가 `npm run build`를 할 것
+    - `build`가 자기 script인 build script(`npm run build`)를 호출할 것
+    - 그 script가 폴더를 생성할 것
+    - `deploy`가 `gh-pages`를 호출하고 -> `build` 폴더를 업로드(publish)할 것(`gh-pages -d build`)
+7. `npm run deploy`
+   - 기본적으로 먼저 `predeploy`를 먼저 호출
+
+### `public` -> `index.html`에서 홈페이지 title 수정하기
+- 변경 사항이 있을 때는 `npm run deploy`를 다시 해야 한다.

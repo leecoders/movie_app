@@ -1,5 +1,20 @@
 # 알게된 내용
 
+## #1 1
+
+### `create-react-app [react_project_name]`
+- React 프로젝트를 쉽게 초기 세팅할 수 있도록 해주는 방법
+- yarn 또는 npm을 통해 `create-react-app`을 global로 설치해준 뒤에 사용한다.
+
+### git repo 생성
+- React 앱 초기 세팅이 완료되었다면 git repo를 만든다.
+- 순서
+  1. git init
+  2. git remote add origin [URL]
+  3. git add . (하기 전에 `.gitignore` 체크하기 - node_module 등)
+  4. git commit -m "comment"
+  5. git push origin master
+
 ## #1 2
 
 ### React에서는 파일만 save하면 새로고침하지 않아도 동적으로 refresh된다.

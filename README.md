@@ -251,8 +251,8 @@ export default App;
 import PropTypes from 'prop-types';
 ...
 Food.propTypes = {
-  fav : PropTypes.number, // number를 요구!!
-  picture : PropTypes.string
+  fav : PropTypes.number.isRequired, // number를 요구!!
+  picture : PropTypes.string.isRequired
 };
 ...
 ```
@@ -463,3 +463,60 @@ import "./App.css";
 - 객체에 대한 이름이 필요 없다.
 
 ### HTML 태그에 class를 통해 CSS를 적용하는 방법에 대한 추가 공부가 필요할 것 같다.
+
+## #4 3 Adding Genres
+
+### JSX는 HTML처럼 보이지만 사실은 JS 문법이 base이다.
+- React는 `class` 키워드에 의해 혼동할 수 있다.
+  - component를 class로 정의한 경우 class 내부의 `render()` 안에서 return되는 HTML 코드에도 `class`라는 키워드를 사용하게 된다. (JS의 `class`와 키워드가 중복됨)
+  - component를 function으로 정의하더라도 `class` 키워드는 혼동을 줄 수 있기 때문에 에러 메시지를 출력한다.
+  - JSX 문법으로 `className`으로 HTML 태그의 prop을 지정하면 `view-source:localhost:3000`에서는 HTML 문법인 `class`로 자동으로 변경되는 것을 알 수 있다.
+
+**결론 : HTML의 class prop은 `class`이지만 JSX에서는 `className`으로 혼동을 피하도록 한다.**
+
+- 또 다른 예로, HTML 태그 중 `<label>`에는 `for`라는 prop이 있다.
+  - `<label for=...>` -> `<label htmlFor=...>`로 사용해야 한다.
+
+### movie component에서 사용할 genres prop 추가하기
+1. `Movie.propTypes`에 먼저 추가한다.
+  - `genres: PropTypes.arrayOf(PropTypes.string).isRequired`를 추가한다.
+    - 체크하고자 하는 prop의 type이 배열인 경우 `PropTypes.array.isRequired`로 하면 된다.
+    - 체크하고자 하는 prop이 배열이고 각 요소가 가져야 할 값을 따로 체크하기 위해 `PropTypes.arrayOf(PropTypes.<type>).isRequired`를 사용한다.
+
+```javascript
+Movie.propTypes = {
+  id: PropTypes.number.isRequired,
+  year: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+  summary: PropTypes.string.isRequired,
+  poster: PropTypes.string.isRequired,
+  genres: PropTypes.arrayOf(PropTypes.string).isRequired
+};
+```
+
+2. Movie component를 호출하는 쪽인 `App.js`에서 prop을 전달한다. (적절한 json 객체 데이터)
+3. Movie component에서 파라미터를 통해 prop을 넘겨 받는다.
+  - `genres` prop은 `arrayOf(string)` type이므로 `Array.map`을 사용해 각 요소를 출력한다.
+    - `<ul>`, `<li>` 태그 사용해서 리스트화 및 각 태그에 적당한 className 지정
+
+```javascript
+function Movie({ id, year, title, summary, poster, genres }) {
+  return (
+    <div className="movie">
+      <img src={poster} alt={title} title={title} />
+      <div className="movie_data">
+        <h3 className="movie_title">{title}</h3>
+        <h5 className="movie_year">{year}</h5>
+        <ul className="genres">
+          {genres.map((genre, idx) => (
+            <li key={idx} className="genres_genre">
+              {genre}
+            </li>
+          ))}
+        </ul>
+        <p className="movie_summary">{summary}</p>
+      </div>
+    </div>
+  );
+}
+```
